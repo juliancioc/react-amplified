@@ -6,9 +6,9 @@ import costUnity from '../../assets/cost-unity.svg';
 
 import Header from '../../components/Header';
 import Form from '../../components/Form';
-
+import { loginApp, createAccount } from "../../store/modules/login/actions";
 import formatValue from '../../utils/formatValue';
-
+import SignUp from "../../pages/SignUp";
 import { Container, CardContainer, Card, TableContainer } from './styles';
 
 const Dashboard = () => {
@@ -36,6 +36,9 @@ const Dashboard = () => {
     <>
       <Header />
       <Container>
+      {createAccount && (
+          <SignUp />
+        )}
         <CardContainer>
           <Card className="card">
             <header>

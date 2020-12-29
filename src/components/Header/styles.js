@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const Container = styled.div`
   background: #5636d3;
@@ -6,16 +6,17 @@ export const Container = styled.div`
 
   @media (max-width: 400px) {
     width: 100%;
+    min-width: 300px;
 
     .flag {
-        flex: auto;
-      }
+      flex: auto;
+    }
   }
 
   header {
     width: 1120px;
     margin: 0 auto;
-    padding: ${({ size }) => (size === 'small' ? '0 20px ' : '0 20px 150px')};
+    padding: ${({ size }) => (size === "small" ? "0 20px " : "0 20px 150px")};
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -24,26 +25,43 @@ export const Container = styled.div`
       color: white;
       display: flex;
       align-items: center;
+      width: 250px;
+      justify-content: space-between;
 
       p {
-        margin-left: 10px;
+        margin: 0;
+      }
+
+      button {
+        background: transparent;
+        border: none;
+      }
+
+      .dolar {
+        display: flex;
+        align-items: center;
+
+        img {
+          margin-right: 5px;
+        }
       }
     }
 
     @media (max-width: 1100px) {
-      width: 350px;
+      width: 100vw;
       display: flex;
       flex-direction: column;
 
       .flag {
         max-width: 150px;
         margin-top: 15px;
+        flex-direction: column;
+
+        button {
+          margin-bottom: 15px;
+        }
       }
     }
-/* 
-    @media (max-width: 550px) {
-      width: 200px !important;
-    } */
 
     nav {
       a {
