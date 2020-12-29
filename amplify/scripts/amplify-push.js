@@ -104,13 +104,12 @@ async function run() {
       } \
     }`;
   } else if (buildConfig.accessKeyId && buildConfig.secretAccessKey && buildConfig.region) {
-   console.log(buildConfig)
     PROVIDER_CONFIG = `{\
       "awscloudformation": {\
         "configLevel":"project",\
         "accessKeyId":"${buildConfig.accessKeyId}",\
         "secretAccessKey":"${buildConfig.secretAccessKey}",\
-        "region":"us-east-2"\
+        "region":"${buildConfig.region}"\
       } \
     }`;
   } else {
