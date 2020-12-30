@@ -2,12 +2,12 @@ import React, { useCallback, useRef, useEffect, useState, FC } from "react";
 import { FiMail, FiLock, FiUserCheck, FiUser } from "react-icons/fi";
 import * as Yup from "yup";
 import { Form } from "@unform/web";
-import { FormHandles } from "@unform/core";
 import { useHistory } from "react-router-dom";
 import { Modal } from "antd";
 import { useSelector, useDispatch } from "react-redux";
+import { DataStore } from "@aws-amplify/datastore";
+import { Users } from "../../models";
 
-import api from "../../services/api";
 import { ContentModal } from "./styles";
 import Input from "../../components/Input";
 import Button from "../../components/Button";
@@ -15,30 +15,17 @@ import getValidationErrors from "../../utils/getValidationErrors";
 import { useToast } from "../../hooks/toast";
 import { createAccount, infoAccount } from "../../store/modules/login/actions";
 
-
-window.dataLayer = window.dataLayer || [];
-
 const SignUp = () => {
   const formRef = useRef(null);
   const { addToast } = useToast();
   const dispatch = useDispatch();
-  const status = useSelector(
-    (state) => state.isCreateAccountUser
-  );
-  console.log(status)
-  const statusInfoAccount = useSelector(
-    (state) => state.isInfoAccountUser
-  );
+  const status = useSelector((state) => state.isCreateAccountUser);
+
+  const statusInfoAccount = useSelector((state) => state.isInfoAccountUser);
   const history = useHistory();
 
   const handleSubmitSignUp = useCallback(
     async (data) => {
-      window.dataLayer.push({ event: "signup", btn_label: "Criar conta" });
-      window.dataLayer.push({
-        event: "create_account_second",
-        btn_label: "Criar conta",
-      });
-
       data.email = data.email.toLowerCase();
 
       try {
@@ -49,7 +36,6 @@ const SignUp = () => {
           cpfCnpj: Yup.string()
             .max(11, "Máximo 11 digitos")
             .min(11, "CPF incompleto")
-            // .matches(/^\d{3}.\d{3}.\d{3}-\d{2}$/, "Utilize ponto e traço")
             .required("CPF obrigatório"),
           email: Yup.string()
             .required("E-mail obrigatório")
@@ -65,15 +51,23 @@ const SignUp = () => {
         });
 
         delete data.passwordConfirmation;
+        await DataStore.save(
+          new Users({
+            firstName: data.firstName,
+            lastName: data.lastName,
+            email: data.email,
+            password: data.password,
+          })
+        );
+
+        const models = await DataStore.query(Users);
+        console.log(models);
 
         await schema.validate(data, {
           abortEarly: false,
         });
 
         data.webSiteUrl = window.location.origin;
-        const res = await api.post("/signup", data);
-
-        window.dataLayer.push({ event: "signup_success" });
 
         dispatch(createAccount({ isCreateAccount: false }));
         dispatch(infoAccount({ isInfoAccount: true }));
@@ -99,11 +93,11 @@ const SignUp = () => {
     [history]
   );
 
-  const handleOk = (e) => {
+  const handleOk = () => {
     dispatch(createAccount({ isCreateAccount: false }));
   };
 
-  const handleCancel = (e) => {
+  const handleCancel = () => {
     dispatch(createAccount({ isCreateAccount: false }));
   };
 
@@ -123,21 +117,20 @@ const SignUp = () => {
         style={{ top: 5 }}
       >
         <ContentModal>
-          <img width="250" src="" alt="" />
           <Form ref={formRef} onSubmit={handleSubmitSignUp}>
             <Input
               icon={FiUser}
-              placeholder="Nome completo"
-              id="fullname"
-              name="fullname"
+              placeholder="Primeiro nome"
+              id="firstName"
+              name="firstName"
               type="text"
             />
             <Input
-              icon={FiUserCheck}
-              placeholder="CPF"
-              id="cpfCnpj"
-              name="cpfCnpj"
-              type="number"
+              icon={FiUser}
+              placeholder="Último nome"
+              id="lastName"
+              name="lastName"
+              type="text"
             />
             <Input
               icon={FiMail}
@@ -174,8 +167,6 @@ const SignUp = () => {
           onCancel={handleCancelInfo}
         >
           <ContentModal>
-            <img width="250" src="" alt="" />
-
             <p>Prezado cliente, </p>
             <p>Enviamos e-mail para ativação da conta.</p>
             <p>Por favor, verifique a caixa de entrada.</p>

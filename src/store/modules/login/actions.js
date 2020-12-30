@@ -2,7 +2,7 @@ export function loginApp(status) {
   return {
     type: "LOGIN_REQUIRED",
     payload: {
-      status,
+      status: status.status,
     },
   };
 }

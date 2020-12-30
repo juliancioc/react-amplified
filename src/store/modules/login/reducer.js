@@ -13,7 +13,7 @@ export const login = (state = INITIAL_STATE, action) => {
       const { status } = action.payload;
       return {
         ...state,
-        status: status.status,
+        status: status,
       };
     }
     default: {

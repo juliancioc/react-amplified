@@ -27,8 +27,11 @@ const Header = ({ size = "large" }) => {
 
   const handleCreateAccount = () => {
     dispatch(createAccount({ isCreateAccount: true }));
+  };
 
-    dispatch(loginApp({ status: false }));
+  const handleLogin = () => {
+    console.log('here')
+    dispatch(loginApp({ status: true }));
   };
 
   return (
@@ -37,6 +40,7 @@ const Header = ({ size = "large" }) => {
         <img src={Logo} alt="GoFinances" />
 
         <div className="flag">
+          <button onClick={handleLogin}>Login</button>
           <button onClick={handleCreateAccount}>Criar conta</button>
           <div className="dolar">
             {!dollarToday ? (
